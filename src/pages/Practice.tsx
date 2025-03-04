@@ -25,51 +25,8 @@ const Practice = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F6F6F7] to-[#F1F1F1] pt-14">
-      {/* Top Navigation Bar */}
-      <div className="fixed top-0 left-0 right-0 bg-white border-b border-gray-100 px-4 py-3 flex items-center justify-between z-10">
-        <div className="flex items-center">
-          <span className="text-[#33C3F0] text-xl font-medium">Academic Arc</span>
-        </div>
-        
-        <div className="flex items-center space-x-6">
-          <Button variant="ghost" className="flex items-center gap-2 text-gray-700">
-            <FileText className="h-4 w-4" />
-            <span>Chapter 1</span>
-          </Button>
-          
-          <Button variant="ghost" className="flex items-center gap-2 text-gray-700">
-            <Book className="h-4 w-4" />
-            <span>Set Objectives</span>
-          </Button>
-          
-          <Button variant="ghost" className="flex items-center gap-2 text-gray-700">
-            <span>Timer Mode</span>
-          </Button>
-          
-          <div className="border-l border-gray-200 h-6"></div>
-          
-          <div className="flex items-center gap-2 text-gray-700">
-            <span>Rank:</span>
-            <span className="font-medium">#1</span>
-            <svg 
-              width="16" 
-              height="16" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="2"
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              className="text-green-500"
-            >
-              <path d="m18 15-6-6-6 6"/>
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <div className="container max-w-6xl mx-auto px-6 py-16">
+    <div className="min-h-screen bg-gradient-to-b from-[#F6F6F7] to-[#F1F1F1]">
+      <div className="container max-w-6xl mx-auto px-6 py-10">
         {/* Problem / Solution / Quotes Tabs */}
         <Tabs 
           defaultValue="problem" 
@@ -77,22 +34,22 @@ const Practice = () => {
           onValueChange={setTabValue}
           className="w-full mb-8"
         >
-          <TabsList className="w-full max-w-md mx-auto grid grid-cols-3 bg-[#edf2f7] p-1 rounded-md">
+          <TabsList className="w-full max-w-sm mx-auto grid grid-cols-3 bg-[#edf2f7] p-0.5 rounded-md">
             <TabsTrigger 
               value="problem" 
-              className="data-[state=active]:bg-white data-[state=active]:text-[#33C3F0] rounded-md py-2"
+              className="data-[state=active]:bg-white data-[state=active]:text-[#33C3F0] rounded-md py-1.5 text-sm"
             >
               Problem
             </TabsTrigger>
             <TabsTrigger 
               value="solution" 
-              className="data-[state=active]:bg-white data-[state=active]:text-[#33C3F0] rounded-md py-2"
+              className="data-[state=active]:bg-white data-[state=active]:text-[#33C3F0] rounded-md py-1.5 text-sm"
             >
               Solution
             </TabsTrigger>
             <TabsTrigger 
               value="quotes" 
-              className="data-[state=active]:bg-white data-[state=active]:text-[#33C3F0] rounded-md py-2"
+              className="data-[state=active]:bg-white data-[state=active]:text-[#33C3F0] rounded-md py-1.5 text-sm"
             >
               Quotes
             </TabsTrigger>
@@ -112,12 +69,12 @@ const Practice = () => {
                     {/* Empty space for working through the problem */}
                   </div>
                 
-                  <div className="mt-10">
+                  <div className="mt-10 flex justify-center">
                     <Button variant="ghost" className="rounded-full p-3">
                       <ArrowLeft className="h-5 w-5" />
                       <span className="sr-only">Previous question</span>
                     </Button>
-                    <span className="mx-4 text-gray-400">Go to question...</span>
+                    <span className="mx-4 text-gray-400 self-center">Go to question...</span>
                     <Button variant="ghost" className="rounded-full p-3">
                       <ArrowRight className="h-5 w-5" />
                       <span className="sr-only">Next question</span>
@@ -143,7 +100,7 @@ const Practice = () => {
               {currentProblem.options.map((option) => (
                 <div 
                   key={option.id}
-                  className="bg-white border border-gray-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                  className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
                 >
                   <div className="flex items-center">
                     <span className="font-medium mr-2">Option {option.id}:</span>
