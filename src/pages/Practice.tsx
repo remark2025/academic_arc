@@ -1,142 +1,202 @@
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, Clock, Zap, Activity, Dumbbell } from "lucide-react";
-import TransitionWrapper from "@/components/UI/TransitionWrapper";
-import GlassPanel from "@/components/UI/GlassPanel";
-
-const practiceCategories = [
-  {
-    id: "adaptive",
-    name: "Adaptive Practice",
-    icon: <Zap className="w-5 h-5" />,
-    description: "Automatically adjusts to your skill level",
-    sessions: [
-      { id: "beginner", name: "Beginner", difficulty: "Easy", duration: "15 min" },
-      { id: "intermediate", name: "Intermediate", difficulty: "Medium", duration: "20 min" },
-      { id: "advanced", name: "Advanced", difficulty: "Hard", duration: "30 min" },
-    ]
-  },
-  {
-    id: "timed",
-    name: "Timed Sessions",
-    icon: <Clock className="w-5 h-5" />,
-    description: "Practice with time constraints",
-    sessions: [
-      { id: "quick", name: "Quick Session", difficulty: "Various", duration: "5 min" },
-      { id: "standard", name: "Standard Session", difficulty: "Various", duration: "15 min" },
-      { id: "extended", name: "Extended Session", difficulty: "Various", duration: "30 min" },
-    ]
-  },
-  {
-    id: "focused",
-    name: "Focused Practice",
-    icon: <Activity className="w-5 h-5" />,
-    description: "Target specific areas for improvement",
-    sessions: [
-      { id: "weak-areas", name: "Weak Areas", difficulty: "Custom", duration: "20 min" },
-      { id: "spaced-repetition", name: "Spaced Repetition", difficulty: "Custom", duration: "25 min" },
-      { id: "challenge", name: "Challenge Mode", difficulty: "Hard", duration: "15 min" },
-    ]
-  }
-];
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, ArrowRight, Share2, Bookmark, Book, MessageSquare, Quote, FileText } from "lucide-react";
+import { Card } from "@/components/ui/card";
 
 const Practice = () => {
-  const [selectedTab, setSelectedTab] = useState("adaptive");
+  const [tabValue, setTabValue] = useState("problem");
+  
+  // Sample problem data 
+  const currentProblem = {
+    question: "What is the probability of rolling a 15 in a single roll of a fair 25-sided die?",
+    options: [
+      { id: "A", text: "1/25" },
+      { id: "B", text: "1/15" },
+      { id: "C", text: "15/25" },
+      { id: "D", text: "3/5" }
+    ],
+    solution: "The probability of rolling a 15 on a fair 25-sided die is 1/25 because there is exactly one face with the number 15, and there are 25 possible equally likely outcomes.",
+    quotes: [
+      "Probability theory tells us how likely an event is to occur based on the total number of possible outcomes.",
+      "In a fair die, all outcomes have an equal probability of occurring."
+    ]
+  };
 
   return (
-    <div className="min-h-screen pt-20 pb-20">
-      <div className="container mx-auto px-6">
-        <TransitionWrapper animation="slide-up">
-          <div className="max-w-4xl mx-auto text-center mb-16">
-            <span className="inline-block px-3 py-1 mb-4 text-xs font-medium tracking-wider bg-primary/10 text-primary rounded-full">
-              CHOOSE YOUR SESSION
-            </span>
-            <h1 className="text-4xl font-semibold mb-4">Practice Dashboard</h1>
-            <p className="text-xl text-muted-foreground">
-              Select your preferred practice mode to begin mastering your skills.
-            </p>
-          </div>
-        </TransitionWrapper>
-
-        <div className="max-w-5xl mx-auto">
-          <Tabs defaultValue="adaptive" value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-            <TabsList className="grid grid-cols-3 mb-8">
-              {practiceCategories.map(category => (
-                <TabsTrigger key={category.id} value={category.id} className="flex items-center gap-2 py-3">
-                  {category.icon}
-                  <span className="hidden sm:inline">{category.name}</span>
-                </TabsTrigger>
-              ))}
-            </TabsList>
-            
-            {practiceCategories.map(category => (
-              <TabsContent key={category.id} value={category.id} className="mt-4">
-                <TransitionWrapper animation="fade-in">
-                  <div className="mb-8">
-                    <h2 className="text-2xl font-medium mb-2">{category.name}</h2>
-                    <p className="text-muted-foreground">{category.description}</p>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {category.sessions.map((session, index) => (
-                      <TransitionWrapper 
-                        key={session.id} 
-                        animation="slide-up" 
-                        delay={index * 100}
-                      >
-                        <Card className="overflow-hidden border-border/50 hover:shadow-md transition-all">
-                          <CardHeader>
-                            <CardTitle>{session.name}</CardTitle>
-                            <CardDescription>
-                              <div className="flex items-center gap-2 mt-1">
-                                <Dumbbell className="w-4 h-4 text-muted-foreground" />
-                                <span>Difficulty: {session.difficulty}</span>
-                              </div>
-                              <div className="flex items-center gap-2 mt-1">
-                                <Clock className="w-4 h-4 text-muted-foreground" />
-                                <span>{session.duration}</span>
-                              </div>
-                            </CardDescription>
-                          </CardHeader>
-                          <CardContent>
-                            <Button className="w-full group">
-                              Start Session
-                              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                            </Button>
-                          </CardContent>
-                        </Card>
-                      </TransitionWrapper>
-                    ))}
-                  </div>
-                </TransitionWrapper>
-              </TabsContent>
-            ))}
-          </Tabs>
+    <div className="min-h-screen bg-gradient-to-b from-[#F6F6F7] to-[#F1F1F1] pt-14">
+      {/* Top Navigation Bar */}
+      <div className="fixed top-0 left-0 right-0 bg-white border-b border-gray-100 px-4 py-3 flex items-center justify-between z-10">
+        <div className="flex items-center">
+          <span className="text-[#33C3F0] text-xl font-medium">Academic Arc</span>
         </div>
         
-        <TransitionWrapper animation="slide-up" delay={300} className="mt-20">
-          <GlassPanel className="p-8 max-w-5xl mx-auto">
-            <div className="flex flex-col md:flex-row gap-8 items-center">
-              <div className="md:w-1/2">
-                <h3 className="text-2xl font-medium mb-4">Resume Your Last Session</h3>
-                <p className="text-muted-foreground mb-6">
-                  Continue where you left off in your learning journey. Your progress has been saved.
-                </p>
-                <Button className="group">
-                  Continue Practice
-                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </Button>
+        <div className="flex items-center space-x-6">
+          <Button variant="ghost" className="flex items-center gap-2 text-gray-700">
+            <FileText className="h-4 w-4" />
+            <span>Chapter 1</span>
+          </Button>
+          
+          <Button variant="ghost" className="flex items-center gap-2 text-gray-700">
+            <Book className="h-4 w-4" />
+            <span>Set Objectives</span>
+          </Button>
+          
+          <Button variant="ghost" className="flex items-center gap-2 text-gray-700">
+            <span>Timer Mode</span>
+          </Button>
+          
+          <div className="border-l border-gray-200 h-6"></div>
+          
+          <div className="flex items-center gap-2 text-gray-700">
+            <span>Rank:</span>
+            <span className="font-medium">#1</span>
+            <svg 
+              width="16" 
+              height="16" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2"
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              className="text-green-500"
+            >
+              <path d="m18 15-6-6-6 6"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div className="container max-w-6xl mx-auto px-6 py-16">
+        {/* Problem / Solution / Quotes Tabs */}
+        <Tabs 
+          defaultValue="problem" 
+          value={tabValue} 
+          onValueChange={setTabValue}
+          className="w-full mb-8"
+        >
+          <TabsList className="w-full max-w-md mx-auto grid grid-cols-3 bg-[#edf2f7] p-1 rounded-md">
+            <TabsTrigger 
+              value="problem" 
+              className="data-[state=active]:bg-white data-[state=active]:text-[#33C3F0] rounded-md py-2"
+            >
+              Problem
+            </TabsTrigger>
+            <TabsTrigger 
+              value="solution" 
+              className="data-[state=active]:bg-white data-[state=active]:text-[#33C3F0] rounded-md py-2"
+            >
+              Solution
+            </TabsTrigger>
+            <TabsTrigger 
+              value="quotes" 
+              className="data-[state=active]:bg-white data-[state=active]:text-[#33C3F0] rounded-md py-2"
+            >
+              Quotes
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Problem Content */}
+          <TabsContent value="problem" className="mt-6">
+            <Card className="shadow-sm border border-gray-100 p-8 bg-white rounded-xl">
+              <div className="flex justify-between">
+                <div className="w-full max-w-2xl">
+                  <h2 className="text-xl font-medium text-gray-800 mb-8">
+                    {currentProblem.question}
+                  </h2>
+                
+                  {/* Empty space for work/notes */}
+                  <div className="w-full h-60 border border-gray-200 rounded-lg mb-6">
+                    {/* Empty space for working through the problem */}
+                  </div>
+                
+                  <div className="mt-10">
+                    <Button variant="ghost" className="rounded-full p-3">
+                      <ArrowLeft className="h-5 w-5" />
+                      <span className="sr-only">Previous question</span>
+                    </Button>
+                    <span className="mx-4 text-gray-400">Go to question...</span>
+                    <Button variant="ghost" className="rounded-full p-3">
+                      <ArrowRight className="h-5 w-5" />
+                      <span className="sr-only">Next question</span>
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="flex flex-col space-y-4">
+                  <Button variant="ghost" className="p-2">
+                    <Share2 className="h-5 w-5 text-gray-500" />
+                    <span className="sr-only">Share</span>
+                  </Button>
+                  <Button variant="ghost" className="p-2">
+                    <Bookmark className="h-5 w-5 text-gray-500" />
+                    <span className="sr-only">Bookmark</span>
+                  </Button>
+                </div>
               </div>
-              <div className="md:w-1/2 bg-gradient-to-r from-primary/5 to-primary/10 rounded-lg p-8 text-center">
-                <div className="text-5xl font-bold text-primary mb-2">75%</div>
-                <p className="text-muted-foreground">Progress in current session</p>
-              </div>
+            </Card>
+            
+            {/* Answer Options */}
+            <div className="grid md:grid-cols-2 gap-6 mt-6">
+              {currentProblem.options.map((option) => (
+                <div 
+                  key={option.id}
+                  className="bg-white border border-gray-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                >
+                  <div className="flex items-center">
+                    <span className="font-medium mr-2">Option {option.id}:</span>
+                    <span>{option.text}</span>
+                  </div>
+                </div>
+              ))}
             </div>
-          </GlassPanel>
-        </TransitionWrapper>
+          </TabsContent>
+
+          {/* Solution Content */}
+          <TabsContent value="solution" className="mt-6">
+            <Card className="shadow-sm border border-gray-100 p-8 bg-white rounded-xl">
+              <h2 className="text-xl font-medium text-gray-800 mb-6">Solution</h2>
+              <p className="text-gray-700 leading-relaxed">
+                {currentProblem.solution}
+              </p>
+            </Card>
+          </TabsContent>
+
+          {/* Quotes Content */}
+          <TabsContent value="quotes" className="mt-6">
+            <Card className="shadow-sm border border-gray-100 p-8 bg-white rounded-xl">
+              <h2 className="text-xl font-medium text-gray-800 mb-6 flex items-center">
+                <Quote className="h-5 w-5 mr-2 text-[#33C3F0]" />
+                Notable Quotes
+              </h2>
+              
+              <div className="space-y-6">
+                {currentProblem.quotes.map((quote, index) => (
+                  <div key={index} className="border-l-4 border-[#33C3F0] pl-4 py-2">
+                    <p className="text-gray-600 italic">{quote}</p>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </TabsContent>
+        </Tabs>
+        
+        {/* Navigation Buttons */}
+        <div className="flex justify-between mt-8">
+          <Button 
+            className="bg-[#33C3F0] hover:bg-[#33C3F0]/90 rounded-full w-12 h-12 flex items-center justify-center"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          
+          <Button 
+            className="bg-[#33C3F0] hover:bg-[#33C3F0]/90 rounded-full w-12 h-12 flex items-center justify-center"
+          >
+            <ArrowRight className="h-5 w-5" />
+          </Button>
+        </div>
       </div>
     </div>
   );
