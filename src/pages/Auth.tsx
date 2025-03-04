@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -6,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
-import { ArrowRight, GitHub, Mail } from "lucide-react";
+import { ArrowRight, Github, Mail } from "lucide-react";
 import TransitionWrapper from "@/components/UI/TransitionWrapper";
 import GlassPanel from "@/components/UI/GlassPanel";
 
@@ -144,7 +143,7 @@ const Auth = () => {
               
               <div className="mt-6 grid grid-cols-2 gap-4">
                 <Button variant="outline" className="w-full">
-                  <GitHub className="mr-2 h-4 w-4" />
+                  <Github className="mr-2 h-4 w-4" />
                   GitHub
                 </Button>
                 <Button variant="outline" className="w-full">
