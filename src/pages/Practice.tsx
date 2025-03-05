@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -18,12 +17,14 @@ import {
   X,
   Target,
   Timer,
-  BarChart
+  BarChart,
+  Tag
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { Separator } from "@/components/ui/separator";
 
 const Practice = () => {
   const [tabValue, setTabValue] = useState("problem");
@@ -100,7 +101,7 @@ const Practice = () => {
       <div 
         ref={sidebarRef}
         className={cn(
-          "fixed top-0 left-0 h-full bg-white shadow-lg w-64 z-50 transition-transform duration-300",
+          "fixed top-0 left-0 h-full bg-white shadow-lg w-64 z-50 transition-transform duration-300 overflow-auto",
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
@@ -111,6 +112,7 @@ const Practice = () => {
           </Button>
         </div>
         <div className="p-4 space-y-6">
+          {/* Navigation links */}
           <div className="space-y-2">
             <div className="text-sm font-medium text-gray-500 mb-2">NAVIGATION</div>
             <a href="/" className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-md">
@@ -130,10 +132,80 @@ const Practice = () => {
               <span>Settings</span>
             </a>
           </div>
+
+          {/* Moved buttons from header to sidebar */}
+          <div className="space-y-2">
+            <div className="text-sm font-medium text-gray-500 mb-2">PRACTICE OPTIONS</div>
+            
+            {/* Chapter selection */}
+            <div className="space-y-1">
+              <div className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-md cursor-pointer">
+                <Book className="h-5 w-5 text-gray-500" />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="ghost" className="flex w-full justify-start p-0 m-0 h-auto">
+                      Chapter 1
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-48">
+                    <div className="space-y-1">
+                      <Button variant="ghost" className="w-full justify-start">Chapter 1</Button>
+                      <Button variant="ghost" className="w-full justify-start">Chapter 2</Button>
+                      <Button variant="ghost" className="w-full justify-start">Chapter 3</Button>
+                      <Button variant="ghost" className="w-full justify-start">Chapter 4</Button>
+                      <Button variant="ghost" className="w-full justify-start">Chapter 5</Button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </div>
+            
+            {/* Set objective button */}
+            <button 
+              onClick={() => setShowObjectiveModal(true)}
+              className="flex w-full items-center gap-3 p-2 hover:bg-gray-100 rounded-md"
+            >
+              <Target className="h-5 w-5 text-gray-500" />
+              <span>Set Objective</span>
+            </button>
+            
+            {/* Timer mode selection */}
+            <div className="space-y-1">
+              <div className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-md cursor-pointer">
+                <Timer className="h-5 w-5 text-gray-500" />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="ghost" className="flex w-full justify-start p-0 m-0 h-auto">
+                      Timer Mode
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-48">
+                    <div className="space-y-1">
+                      <Button variant="ghost" className="w-full justify-start">Timer Mode</Button>
+                      <Button variant="ghost" className="w-full justify-start">Pomodoro Mode</Button>
+                      <Button variant="ghost" className="w-full justify-start">Level Mode</Button>
+                      <Button variant="ghost" className="w-full justify-start">Exam Mode</Button>
+                      <Button variant="ghost" className="w-full justify-start">Manual Mode</Button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </div>
+          </div>
+          
+          <Separator />
+          
+          {/* Settings or other links could go here */}
+          <div className="pt-4">
+            <a href="/settings" className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-md">
+              <FileText className="h-5 w-5 text-gray-500" />
+              <span>Settings</span>
+            </a>
+          </div>
         </div>
       </div>
 
-      {/* Header */}
+      {/* Header - Removed the buttons that are now in sidebar */}
       <div className="py-4 px-6 flex items-center justify-between bg-white shadow-sm">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(true)}>
@@ -142,53 +214,7 @@ const Practice = () => {
           <div className="font-bold text-xl">Mastery</div>
         </div>
         
-        <div className="flex items-center gap-4">
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="ghost" className="flex items-center gap-2 font-medium">
-                <Book className="h-5 w-5" />
-                Chapter 1
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-48">
-              <div className="space-y-1">
-                <Button variant="ghost" className="w-full justify-start">Chapter 1</Button>
-                <Button variant="ghost" className="w-full justify-start">Chapter 2</Button>
-                <Button variant="ghost" className="w-full justify-start">Chapter 3</Button>
-                <Button variant="ghost" className="w-full justify-start">Chapter 4</Button>
-                <Button variant="ghost" className="w-full justify-start">Chapter 5</Button>
-              </div>
-            </PopoverContent>
-          </Popover>
-
-          <Button 
-            variant="ghost" 
-            className="flex items-center gap-2 font-medium"
-            onClick={() => setShowObjectiveModal(true)}
-          >
-            <Target className="h-5 w-5" />
-            Set Objective
-          </Button>
-
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="ghost" className="flex items-center gap-2 font-medium">
-                <Timer className="h-5 w-5" />
-                Timer Mode
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-48">
-              <div className="space-y-1">
-                <Button variant="ghost" className="w-full justify-start">Timer Mode</Button>
-                <Button variant="ghost" className="w-full justify-start">Pomodoro Mode</Button>
-                <Button variant="ghost" className="w-full justify-start">Level Mode</Button>
-                <Button variant="ghost" className="w-full justify-start">Exam Mode</Button>
-                <Button variant="ghost" className="w-full justify-start">Manual Mode</Button>
-              </div>
-            </PopoverContent>
-          </Popover>
-        </div>
-
+        {/* Keep the signin button */}
         <div>
           <Button size="sm" variant="default" className="rounded-full px-6">
             Sign In
@@ -271,8 +297,12 @@ const Practice = () => {
                     <span className="sr-only">Bookmark</span>
                   </Button>
                   <Button variant="ghost" className="p-2">
-                    <MessageSquare className="h-5 w-5 text-gray-500" />
+                    <Tag className="h-5 w-5 text-gray-500" />
                     <span className="sr-only">Tag</span>
+                  </Button>
+                  <Button variant="ghost" className="p-2">
+                    <MessageSquare className="h-5 w-5 text-gray-500" />
+                    <span className="sr-only">Comment</span>
                   </Button>
                 </div>
               </div>
