@@ -1,12 +1,13 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Share2, Bookmark, Book, MessageSquare, Quote, FileText } from "lucide-react";
+import { ArrowLeft, ArrowRight, Share2, Bookmark, Book, MessageSquare, Quote, FileText, Clock } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 const Practice = () => {
   const [tabValue, setTabValue] = useState("problem");
+  const [timer, setTimer] = useState(0);
   
   // Sample problem data 
   const currentProblem = {
@@ -24,15 +25,37 @@ const Practice = () => {
     ]
   };
 
+  // Timer effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimer(prevTimer => prevTimer + 1);
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  // Format timer in mm:ss
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#F6F6F7] to-[#F1F1F1]">
       <div className="container max-w-6xl mx-auto px-6 py-10">
+        {/* Timer display */}
+        <div className="absolute top-4 right-4 bg-white px-3 py-1.5 rounded-lg shadow-sm flex items-center space-x-1.5 text-gray-700">
+          <Clock className="h-4 w-4 text-[#33C3F0]" />
+          <span className="font-mono text-sm">{formatTime(timer)}</span>
+        </div>
+        
         {/* Problem / Solution / Quotes Tabs */}
         <Tabs 
           defaultValue="problem" 
           value={tabValue} 
           onValueChange={setTabValue}
-          className="w-full mb-8"
+          className="w-full mb-8 pt-6"
         >
           <TabsList className="w-full max-w-sm mx-auto grid grid-cols-3 bg-[#edf2f7] p-0.5 rounded-md">
             <TabsTrigger 
@@ -64,17 +87,17 @@ const Practice = () => {
                     {currentProblem.question}
                   </h2>
                 
-                  {/* Empty space for work/notes */}
-                  <div className="w-full h-60 border border-gray-200 rounded-lg mb-6">
+                  {/* Empty space for work/notes - now with more rounded corners */}
+                  <div className="w-full h-60 border border-gray-200 rounded-2xl mb-6">
                     {/* Empty space for working through the problem */}
                   </div>
                 
-                  <div className="mt-10 flex justify-center">
+                  <div className="mt-10 flex justify-center items-center">
                     <Button variant="ghost" className="rounded-full p-3">
                       <ArrowLeft className="h-5 w-5" />
                       <span className="sr-only">Previous question</span>
                     </Button>
-                    <span className="mx-4 text-gray-400 self-center">Go to question...</span>
+                    <span className="mx-4 text-gray-400">Go to question...</span>
                     <Button variant="ghost" className="rounded-full p-3">
                       <ArrowRight className="h-5 w-5" />
                       <span className="sr-only">Next question</span>
