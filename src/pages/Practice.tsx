@@ -18,13 +18,16 @@ import {
   Target,
   Timer,
   BarChart,
-  Tag
+  Tag,
+  Home,
+  Settings
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
+import { Link } from "react-router-dom";
 
 const Practice = () => {
   const [tabValue, setTabValue] = useState("problem");
@@ -91,12 +94,6 @@ const Practice = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#F6F6F7] to-[#F1F1F1]">
-      {/* Timer display */}
-      <div className="absolute top-4 right-4 bg-white px-3 py-1.5 rounded-lg shadow-sm flex items-center space-x-1.5 text-gray-700">
-        <Clock className="h-4 w-4 text-[#33C3F0]" />
-        <span className="font-mono text-sm">{formatTime(timer)}</span>
-      </div>
-
       {/* Sidebar */}
       <div 
         ref={sidebarRef}
@@ -115,25 +112,29 @@ const Practice = () => {
           {/* Navigation links */}
           <div className="space-y-2">
             <div className="text-sm font-medium text-gray-500 mb-2">NAVIGATION</div>
-            <a href="/" className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-md">
-              <Book className="h-5 w-5 text-gray-500" />
+            <Link to="/" className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-md">
+              <Home className="h-5 w-5 text-gray-500" />
               <span>Home</span>
-            </a>
-            <a href="/practice" className="flex items-center gap-3 p-2 bg-gray-100 rounded-md text-primary">
+            </Link>
+            <Link to="/practice" className="flex items-center gap-3 p-2 bg-gray-100 rounded-md text-primary">
               <Target className="h-5 w-5" />
               <span>Practice</span>
-            </a>
-            <a href="/dashboard" className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-md">
+            </Link>
+            <Link to="/dashboard" className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-md">
               <BarChart className="h-5 w-5 text-gray-500" />
               <span>Dashboard</span>
-            </a>
-            <a href="/settings" className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-md">
+            </Link>
+            <Link to="/about" className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-md">
               <FileText className="h-5 w-5 text-gray-500" />
+              <span>About</span>
+            </Link>
+            <Link to="/settings" className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-md">
+              <Settings className="h-5 w-5 text-gray-500" />
               <span>Settings</span>
-            </a>
+            </Link>
           </div>
 
-          {/* Moved buttons from header to sidebar */}
+          {/* Practice Options */}
           <div className="space-y-2">
             <div className="text-sm font-medium text-gray-500 mb-2">PRACTICE OPTIONS</div>
             
@@ -195,41 +196,32 @@ const Practice = () => {
           
           <Separator />
           
-          {/* Settings or other links could go here */}
+          {/* Settings or other links */}
           <div className="pt-4">
-            <a href="/settings" className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-md">
-              <FileText className="h-5 w-5 text-gray-500" />
+            <Link to="/settings" className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-md">
+              <Settings className="h-5 w-5 text-gray-500" />
               <span>Settings</span>
-            </a>
+            </Link>
           </div>
         </div>
       </div>
 
-      {/* Header - Removed the buttons that are now in sidebar */}
-      <div className="py-4 px-6 flex items-center justify-between bg-white shadow-sm">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(true)}>
-            <Menu className="h-5 w-5" />
-          </Button>
-          <div className="font-bold text-xl">Mastery</div>
-        </div>
-        
-        {/* Keep the signin button */}
-        <div>
-          <Button size="sm" variant="default" className="rounded-full px-6">
-            Sign In
-          </Button>
-        </div>
-      </div>
+      {/* We're removing the custom header since we'll use the global Header component */}
 
-      <div className="container max-w-6xl mx-auto px-6 py-6">
-        {/* Progress bar */}
-        <div className="mb-6">
-          <div className="flex justify-between text-sm text-gray-500 mb-2">
-            <span>Progress</span>
-            <span>30%</span>
+      <div className="container max-w-6xl mx-auto px-6 py-6 pt-20">
+        {/* Progress bar and timer on the same line */}
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex-grow max-w-md mr-4">
+            <div className="flex justify-between text-sm text-gray-500 mb-2">
+              <span>Progress</span>
+              <span>30%</span>
+            </div>
+            <Progress value={progress} className="h-2" />
           </div>
-          <Progress value={progress} className="h-2" />
+          <div className="bg-white px-3 py-1.5 rounded-lg shadow-sm flex items-center space-x-1.5 text-gray-700">
+            <Clock className="h-4 w-4 text-[#33C3F0]" />
+            <span className="font-mono text-sm">{formatTime(timer)}</span>
+          </div>
         </div>
         
         {/* Problem / Solution / Quotes Tabs */}
