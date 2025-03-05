@@ -50,6 +50,7 @@ const Practice = () => {
     quotes: [
       "Probability theory tells us how likely an event is to occur based on the total number of possible outcomes.",
       "In a fair die, all outcomes have an equal probability of occurring."
+>>>>>>> 9db90fef233842feb744024161557640865839a8
     ]
   };
 
