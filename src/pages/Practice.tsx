@@ -33,9 +33,6 @@ const Practice = () => {
   const [tabValue, setTabValue] = useState("problem");
   const [timer, setTimer] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [showObjectiveModal, setShowObjectiveModal] = useState(false);
-  const [objectiveTab, setObjectiveTab] = useState("questions");
-  const [questionCount, setQuestionCount] = useState(20);
   const [progress, setProgress] = useState(30); // Example progress value
   const sidebarRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
@@ -83,14 +80,6 @@ const Practice = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  const setObjective = () => {
-    toast({
-      title: "Objective Set",
-      description: `You'll practice ${questionCount} questions`,
-    });
-    setShowObjectiveModal(false);
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#F6F6F7] to-[#F1F1F1]">
@@ -163,8 +152,15 @@ const Practice = () => {
             
             {/* Set objective button */}
             <button 
-              onClick={() => setShowObjectiveModal(true)}
               className="flex w-full items-center gap-3 p-2 hover:bg-gray-100 rounded-md"
+              onClick={() => {
+                // This will now use the header modal via a global state or context
+                const headerSetObjectiveButton = document.querySelector('[data-header-set-objective]');
+                if (headerSetObjectiveButton instanceof HTMLElement) {
+                  headerSetObjectiveButton.click();
+                }
+                setSidebarOpen(false);
+              }}
             >
               <Target className="h-5 w-5 text-gray-500" />
               <span>Set Objective</span>
@@ -174,22 +170,19 @@ const Practice = () => {
             <div className="space-y-1">
               <div className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-md cursor-pointer">
                 <Timer className="h-5 w-5 text-gray-500" />
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="ghost" className="flex w-full justify-start p-0 m-0 h-auto">
-                      Timer Mode
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-48">
-                    <div className="space-y-1">
-                      <Button variant="ghost" className="w-full justify-start">Timer Mode</Button>
-                      <Button variant="ghost" className="w-full justify-start">Pomodoro Mode</Button>
-                      <Button variant="ghost" className="w-full justify-start">Level Mode</Button>
-                      <Button variant="ghost" className="w-full justify-start">Exam Mode</Button>
-                      <Button variant="ghost" className="w-full justify-start">Manual Mode</Button>
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                <button
+                  className="flex w-full justify-start p-0 m-0 h-auto text-left"
+                  onClick={() => {
+                    // This will now use the header modal via a global state or context
+                    const headerTimerModeButton = document.querySelector('[data-header-timer-mode]');
+                    if (headerTimerModeButton instanceof HTMLElement) {
+                      headerTimerModeButton.click();
+                    }
+                    setSidebarOpen(false);
+                  }}
+                >
+                  Timer Mode
+                </button>
               </div>
             </div>
           </div>
@@ -205,8 +198,6 @@ const Practice = () => {
           </div>
         </div>
       </div>
-
-      {/* We're removing the custom header since we'll use the global Header component */}
 
       <div className="container max-w-6xl mx-auto px-6 py-6 pt-20">
         {/* Progress bar and timer on the same line */}
@@ -360,72 +351,6 @@ const Practice = () => {
           </Button>
         </div>
       </div>
-
-      {/* Set Objective Modal */}
-      {showObjectiveModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg w-full max-w-md">
-            <div className="flex justify-between items-center p-4 border-b">
-              <h2 className="text-xl font-semibold">Set Your Practice Objective</h2>
-              <Button variant="ghost" size="icon" onClick={() => setShowObjectiveModal(false)}>
-                <X className="h-5 w-5" />
-              </Button>
-            </div>
-            <div className="p-4">
-              <div className="flex mb-4 bg-gray-100 rounded-lg p-1">
-                <button 
-                  className={cn(
-                    "flex-1 py-2 text-center rounded-md transition-colors", 
-                    objectiveTab === "questions" ? "bg-white shadow-sm" : "hover:bg-white/50"
-                  )}
-                  onClick={() => setObjectiveTab("questions")}
-                >
-                  Questions
-                </button>
-                <button 
-                  className={cn(
-                    "flex-1 py-2 text-center rounded-md transition-colors", 
-                    objectiveTab === "time" ? "bg-white shadow-sm" : "hover:bg-white/50"
-                  )}
-                  onClick={() => setObjectiveTab("time")}
-                >
-                  Time
-                </button>
-              </div>
-
-              {objectiveTab === "questions" && (
-                <div>
-                  <Input 
-                    type="number" 
-                    value={questionCount} 
-                    onChange={(e) => setQuestionCount(parseInt(e.target.value) || 0)}
-                    className="mb-4" 
-                  />
-                </div>
-              )}
-
-              {objectiveTab === "time" && (
-                <div>
-                  <Input 
-                    type="number" 
-                    placeholder="Minutes" 
-                    className="mb-4"
-                  />
-                </div>
-              )}
-
-              <div className="flex justify-end">
-                <Button 
-                  className="bg-[#00BCD4] hover:bg-[#00BCD4]/90 text-white rounded-full px-6"
-                  onClick={setObjective}
-                >
-                  Set Objective
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

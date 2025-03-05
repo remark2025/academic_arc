@@ -8,11 +8,26 @@ import {
   Home, BarChart, Settings, FileText
 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showObjectiveModal, setShowObjectiveModal] = useState(false);
+  const [showPracticeModeModal, setShowPracticeModeModal] = useState(false);
+  const [objectiveTab, setObjectiveTab] = useState("questions");
+  const [questionCount, setQuestionCount] = useState(20);
   const location = useLocation();
+  const { toast } = useToast();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,9 +37,122 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const setObjective = () => {
+    toast({
+      title: "Objective Set",
+      description: `You'll practice ${questionCount} questions`,
+    });
+    setShowObjectiveModal(false);
+  };
+
   return (
     <>
-      {/* Circular Navigation Panel */}
+      <header
+        className={cn(
+          "fixed top-0 w-full z-40 transition-all duration-300 py-4 px-6 md:px-8",
+          isScrolled
+            ? "glass border-b border-neutral-200/20 shadow-sm"
+            : "bg-transparent"
+        )}
+      >
+        <div className="container mx-auto">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              {/* Sidebar Toggle Button - now positioned BEFORE the logo */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:block"
+                aria-label="Toggle menu"
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+              >
+                <Menu className="h-6 w-6" />
+              </Button>
+              
+              <Link 
+                to="/" 
+                className="text-2xl font-semibold text-primary tracking-tight transition-opacity hover:opacity-80"
+              >
+                Mastery
+              </Link>
+            </div>
+
+            {/* Header buttons */}
+            <div className="hidden md:flex items-center space-x-3">
+              {/* Chapter Selection */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="gap-2">
+                    <Book className="h-4 w-4" />
+                    Chapter 1
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-48">
+                  <div className="space-y-1">
+                    <Button variant="ghost" className="w-full justify-start">Chapter 1</Button>
+                    <Button variant="ghost" className="w-full justify-start">Chapter 2</Button>
+                    <Button variant="ghost" className="w-full justify-start">Chapter 3</Button>
+                    <Button variant="ghost" className="w-full justify-start">Chapter 4</Button>
+                    <Button variant="ghost" className="w-full justify-start">Chapter 5</Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+
+              {/* Set Objective - now opens a modal */}
+              <Button 
+                variant="outline" 
+                className="gap-2"
+                onClick={() => setShowObjectiveModal(true)}
+                data-header-set-objective
+              >
+                <Target className="h-4 w-4" />
+                Set Objective
+              </Button>
+
+              {/* Timer Mode - now opens a modal */}
+              <Button 
+                variant="outline" 
+                className="gap-2"
+                onClick={() => setShowPracticeModeModal(true)}
+                data-header-timer-mode
+              >
+                <Timer className="h-4 w-4" />
+                Timer Mode
+              </Button>
+
+              {/* Rank */}
+              <Button variant="outline" className="gap-2">
+                <Award className="h-4 w-4" />
+                Rank
+              </Button>
+
+              {/* Sign In button */}
+              <Link to="/auth">
+                <Button size="default" variant="default" className="rounded-full px-6">
+                  Sign In
+                </Button>
+              </Link>
+            </div>
+
+            {/* Mobile menu button - not needed since we have the circular navigation */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              aria-label="Toggle menu"
+            >
+              {sidebarOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </Button>
+          </div>
+        </div>
+      </header>
+      
+      {/* Circular Navigation Panel - moved out of the header */}
       <div 
         className={cn(
           "fixed z-50 left-5 top-1/2 -translate-y-1/2 transition-transform duration-300",
@@ -117,113 +245,138 @@ const Header = () => {
         </div>
       </div>
 
-      <header
-        className={cn(
-          "fixed top-0 w-full z-40 transition-all duration-300 py-4 px-6 md:px-8",
-          isScrolled
-            ? "glass border-b border-neutral-200/20 shadow-sm"
-            : "bg-transparent"
-        )}
-      >
-        <div className="container mx-auto">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              {/* Using md:hidden to hide this on larger screens since we now have the circular navigation */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="md:hidden"
-                aria-label="Toggle menu"
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-              >
-                <Menu className="h-6 w-6" />
-              </Button>
+      {/* Set Objective Modal */}
+      <Dialog open={showObjectiveModal} onOpenChange={setShowObjectiveModal}>
+        <DialogContent className="bg-white p-0 max-w-md">
+          <DialogHeader className="p-4 border-b">
+            <DialogTitle className="text-xl font-semibold">Set Your Practice Objective</DialogTitle>
+            <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </DialogClose>
+          </DialogHeader>
+          
+          <div className="p-4">
+            <Tabs 
+              value={objectiveTab} 
+              onValueChange={setObjectiveTab} 
+              className="w-full"
+            >
+              <TabsList className="grid w-full grid-cols-2 mb-4">
+                <TabsTrigger value="questions" className="text-center">Questions</TabsTrigger>
+                <TabsTrigger value="time" className="text-center">Time</TabsTrigger>
+              </TabsList>
               
-              <Link 
-                to="/" 
-                className="text-2xl font-semibold text-primary tracking-tight transition-opacity hover:opacity-80"
+              <TabsContent value="questions" className="mt-0">
+                <Input 
+                  type="number" 
+                  value={questionCount} 
+                  onChange={(e) => setQuestionCount(parseInt(e.target.value) || 0)}
+                  className="mb-4" 
+                />
+              </TabsContent>
+              
+              <TabsContent value="time" className="mt-0">
+                <Input 
+                  type="number" 
+                  placeholder="Minutes" 
+                  className="mb-4"
+                />
+              </TabsContent>
+            </Tabs>
+            
+            <div className="flex justify-end">
+              <Button 
+                onClick={setObjective}
+                className="bg-[#33C3F0] hover:bg-[#33C3F0]/90 text-white px-6"
               >
-                Mastery
-              </Link>
-            </div>
-
-            {/* Header buttons */}
-            <div className="hidden md:flex items-center space-x-3">
-              {/* Chapter Selection */}
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className="gap-2">
-                    <Book className="h-4 w-4" />
-                    Chapter 1
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-48">
-                  <div className="space-y-1">
-                    <Button variant="ghost" className="w-full justify-start">Chapter 1</Button>
-                    <Button variant="ghost" className="w-full justify-start">Chapter 2</Button>
-                    <Button variant="ghost" className="w-full justify-start">Chapter 3</Button>
-                    <Button variant="ghost" className="w-full justify-start">Chapter 4</Button>
-                    <Button variant="ghost" className="w-full justify-start">Chapter 5</Button>
-                  </div>
-                </PopoverContent>
-              </Popover>
-
-              {/* Set Objective */}
-              <Button variant="outline" className="gap-2">
-                <Target className="h-4 w-4" />
                 Set Objective
               </Button>
-
-              {/* Timer Mode */}
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className="gap-2">
-                    <Timer className="h-4 w-4" />
-                    Timer Mode
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-48">
-                  <div className="space-y-1">
-                    <Button variant="ghost" className="w-full justify-start">Timer Mode</Button>
-                    <Button variant="ghost" className="w-full justify-start">Pomodoro Mode</Button>
-                    <Button variant="ghost" className="w-full justify-start">Level Mode</Button>
-                    <Button variant="ghost" className="w-full justify-start">Exam Mode</Button>
-                    <Button variant="ghost" className="w-full justify-start">Manual Mode</Button>
-                  </div>
-                </PopoverContent>
-              </Popover>
-
-              {/* Rank */}
-              <Button variant="outline" className="gap-2">
-                <Award className="h-4 w-4" />
-                Rank
-              </Button>
-
-              {/* Sign In button */}
-              <Link to="/auth">
-                <Button size="default" variant="default" className="rounded-full px-6">
-                  Sign In
-                </Button>
-              </Link>
             </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
-            {/* Mobile menu button - not needed since we have the circular navigation */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              aria-label="Toggle menu"
+      {/* Practice Mode Modal */}
+      <Dialog open={showPracticeModeModal} onOpenChange={setShowPracticeModeModal}>
+        <DialogContent className="bg-white p-0 max-w-md">
+          <DialogHeader className="p-4 border-b">
+            <DialogTitle className="text-xl font-semibold">Select Practice Mode</DialogTitle>
+            <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </DialogClose>
+          </DialogHeader>
+          
+          <div className="p-4 space-y-2">
+            <Button 
+              variant="ghost" 
+              className="w-full justify-start"
+              onClick={() => {
+                toast({
+                  title: "Timer Mode Selected",
+                  description: "You've selected Timer Mode for your practice session",
+                });
+                setShowPracticeModeModal(false);
+              }}
             >
-              {sidebarOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
+              Timer Mode
+            </Button>
+            <Button 
+              variant="ghost" 
+              className="w-full justify-start"
+              onClick={() => {
+                toast({
+                  title: "Pomodoro Mode Selected",
+                  description: "You've selected Pomodoro Mode for your practice session",
+                });
+                setShowPracticeModeModal(false);
+              }}
+            >
+              Pomodoro Mode
+            </Button>
+            <Button 
+              variant="ghost" 
+              className="w-full justify-start"
+              onClick={() => {
+                toast({
+                  title: "Level Mode Selected",
+                  description: "You've selected Level Mode for your practice session",
+                });
+                setShowPracticeModeModal(false);
+              }}
+            >
+              Level Mode
+            </Button>
+            <Button 
+              variant="ghost" 
+              className="w-full justify-start"
+              onClick={() => {
+                toast({
+                  title: "Exam Mode Selected",
+                  description: "You've selected Exam Mode for your practice session",
+                });
+                setShowPracticeModeModal(false);
+              }}
+            >
+              Exam Mode
+            </Button>
+            <Button 
+              variant="ghost" 
+              className="w-full justify-start"
+              onClick={() => {
+                toast({
+                  title: "Manual Mode Selected",
+                  description: "You've selected Manual Mode for your practice session",
+                });
+                setShowPracticeModeModal(false);
+              }}
+            >
+              Manual Mode
             </Button>
           </div>
-        </div>
-      </header>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
